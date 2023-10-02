@@ -1,0 +1,1 @@
+{"version":3,"file":"bundle.107a81e30b9de21ce101.js","mappings":"AACAA,QAAQC,IADS","sources":["webpack://big-trip/./src/main.js"],"sourcesContent":["const messaege = 'Hello KEKS';\nconsole.log(messaege);\n"],"names":["console","log"],"sourceRoot":""}
