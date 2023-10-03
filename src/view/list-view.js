@@ -19,8 +19,8 @@ import CardView from './card-view.js';
  *  id: string
  *  types: Array<Selectable<Type>>
  *  destinations: Array<Selectable<Destination>>
- *  dateFrom: string
- *  dateTo: string
+ *  dateFrom: Date
+ *  dateTo: Date
  *  basePrice: number
  *  offers: Array<Selectable<Offer>>
  *  isFavorite: boolean

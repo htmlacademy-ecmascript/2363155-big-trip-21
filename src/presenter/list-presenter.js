@@ -1,28 +1,10 @@
 import Presenter from './presenter.js';
 
 /**
- * @typedef {import('../views/list-view').default} View
- * @typedef {import('../models/app-model').default} Model
+ * @typedef {import('../view/list-view').default} View
+ * @typedef {import('../model/app-model').default} Model
  *
  * @extends {Presenter<View, Model>}
-
- * export default class PointView extends AbstractView {
-  #point = null;
-  #pointDestination = null;
-  #pointOffers = null;
-  #handleEditClick = null;
-
-  constructor({ point = POINT_EMPTY, pointDestination, pointOffers, onEditClick }) {
-    super();
-    this.#point = point;
-    this.#pointDestination = pointDestination;
-    this.#pointOffers = pointOffers;
-    this.#handleEditClick = onEditClick; // метод вызова формы редактирования
-
-    this.element.querySelector('.event__rollup-btn') // находим кнопку в элементе
-      .addEventListener('click', this.#editClickHandler); // вешаем обработчик
-  }
-
  */
 class ListPresenter extends Presenter {
   /**

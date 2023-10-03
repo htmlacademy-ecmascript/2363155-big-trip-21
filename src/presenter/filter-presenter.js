@@ -1,8 +1,8 @@
 import Presenter from './presenter.js';
 
 /**
- * @typedef {import('../views/filter-view').default} View
- * @typedef {import('../models/app-model').default} Model
+ * @typedef {import('../view/filter-view').default} View
+ * @typedef {import('../model/app-model').default} Model
  *
  * @extends {Presenter<View, Model>}
  */
@@ -20,7 +20,17 @@ class FilterPresenter extends Presenter {
    * @override
    */
   updateView() {
-    this.view.render();
+    /**
+     * @type {Array<FilterType>}
+     */
+    const values = ['everything', 'future', 'present', 'past'];
+    const items = values.map((value) => ({
+      value,
+      isSelected: value === 'everything',
+      isDisabled: value === 'future'
+    }));
+
+    this.view.setState({items});
   }
 }
 
