@@ -1,10 +1,9 @@
 import View from './view.js';
 import {
-  html,
   formatTime,
   formatDate,
   formatDuration,
-  formatNumber
+  html, formatNumber
 } from '../util.js';
 
 /**
@@ -52,7 +51,8 @@ class CardView extends View {
              class="event__type-icon"
              height="42"
              src="img/icons/${currentType}.png"
-             width="42" ${currentType}>
+             width="42" ${currentType}
+        >
       </div>
     `;
   }
@@ -79,7 +79,9 @@ class CardView extends View {
                 datetime="${dateTo}">${formatTime(dateTo)}
           </time>
         </p>
-        <p class="event__duration">${formatDuration(dateFrom, dateTo)}</p>
+        <p class="event__duration">
+          ${formatDuration(dateFrom, dateTo)}
+        </p>
       </div>
     `;
   }

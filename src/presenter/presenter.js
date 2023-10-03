@@ -1,8 +1,8 @@
 import navigation from '../navigation.js';
 
 /**
- * @template {import('../views/view').default} View
- * @template {import('../models/model').default} Model
+ * @template {import('../view/view').default} View
+ * @template {import('../model/model').default} Model
  */
 class Presenter {
 

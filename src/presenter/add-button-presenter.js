@@ -1,8 +1,8 @@
 import Presenter from './presenter.js';
 
 /**
- * @typedef {import('../views/add-button-view').default} View
- * @typedef {import('../models/app-model').default} Model
+ * @typedef {import('../view/add-button-view').default} View
+ * @typedef {import('../model/app-model').default} Model
  *
  * @extends {Presenter<View, Model>}
  */
