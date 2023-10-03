@@ -1,11 +1,10 @@
 import View from './view.js';
 import {
-  html,
   formatTime,
   formatDate,
   formatDuration,
-  formatNumber
-} from './util.js';
+  html, formatNumber
+} from '../util.js';
 
 /**
  * @typedef {import('./list-view').ItemState} State
