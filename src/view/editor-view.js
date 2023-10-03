@@ -10,7 +10,15 @@ import {html} from '../util.js';
 class EditorView extends View {
   constructor() {
     super();
-    // this.classList.add('trip-info');
+    this.addEventListener('click', this.onClick);
+  }
+
+  connectedCallback() {
+    document.addEventListener('keydown', this);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('keydown', this);
   }
 
   createHtml() {
@@ -200,7 +208,6 @@ class EditorView extends View {
   }
 
   createDestinationHtml() {
-
     const {destinations} = this.state;
     const selectedDestination = destinations.find((destination) => destination.isSelected);
     if (!selectedDestination) {
@@ -213,13 +220,33 @@ class EditorView extends View {
         <p class="event__destination-description">${selectedDestination.description}</p>
         <div class="event__photos-container">
           <div class="event__photos-tape">
-            ${selectedDestination.pictures.map((picture) => html`
+            ${Array.isArray(selectedDestination.pictures) ? selectedDestination.pictures.map((picture) => html`
               <img class="event__photo" src="${picture.src}" alt="${picture.description}">
-            `)}
+            `) : ''}
           </div>
         </div>
       </section>
     `;
+  }
+
+  /**
+   * @param {PointerEvent & {
+   *   target: Element
+   * }} event
+   */
+  onClick(event) {
+    if (event.target.closest('.event__rollup-btn')) {
+      this.dispatch('close');
+    }
+  }
+
+  /**
+   * @param {KeyboardEvent} event
+   */
+  handleEvent(event) {
+    if (event.key === 'Escape') {
+      this.dispatch('close');
+    }
   }
 }
 

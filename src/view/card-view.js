@@ -5,7 +5,7 @@ import {
   formatDate,
   formatDuration,
   formatNumber
-} from './util.js';
+} from '../util.js';
 
 /**
  * @typedef {import('./list-view').ItemState} State
@@ -15,8 +15,9 @@ import {
 class CardView extends View {
   constructor() {
     super();
-    // this.classList.add('trip-info');
+    this.addEventListener('click', this.onClick);
   }
+
 
   createHtml() {
     return html`
@@ -131,6 +132,17 @@ class CardView extends View {
         <span class="visually-hidden">Open event</span>
       </button>
     `;
+  }
+
+  /**
+   * @param {PointerEvent & {
+   *   target: Element
+   * }} event
+   */
+  onClick(event) {
+    if (event.target.closest('.event__rollup-btn')) {
+      this.dispatch('open');
+    }
   }
 }
 
