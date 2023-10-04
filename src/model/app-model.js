@@ -1,28 +1,29 @@
 import Model from './model.js';
-import points from '../data/poins.json';
-import offers from '../data/offers.json';
-import destinations from '../data/destinations.json';
 import PointModel from './point-model.js';
 
 class AppModel extends Model {
 
-  constructor() {
+  /**
+   * @param {import('../service/api-service').default} apiService
+   */
+  constructor(apiService) {
     super();
+    this.apiService = apiService;
 
     /**
      * @type {Array<Point>}
      */
-    this._points = [];
+    this.points = [];
 
     /**
      * @type {Array<Destination>}
      */
-    this._destinations = [];
+    this.destinations = [];
 
     /**
      * @type {Array<OfferGroup>}
      */
-    this._offerGroups = [];
+    this.offerGroups = [];
 
     /**
      *
@@ -52,13 +53,22 @@ class AppModel extends Model {
    * @returns {Promise<void>}
    */
   async ready() {
-    // TODO get server data
-    // @ts-ignore
-    this._points = points;
-    // @ts-ignore
-    this._destinations = destinations;
-    // @ts-ignore
-    this._offerGroups = offers;
+    try {
+      const [points, destinations, offerGroups] = await Promise.all([
+        this.apiService.getPoints(),
+        this.apiService.getDestinations(),
+        this.apiService.getOfferGroups()
+      ]);
+
+      this.points = points;
+      this.destinations = destinations;
+      this.offerGroups = offerGroups;
+      this.dispatch('ready');
+
+    } catch (error) {
+      this.dispatch('error');
+      throw error;
+    }
   }
 
   /**
@@ -74,7 +84,7 @@ class AppModel extends Model {
     const defaultSort = this.sortCallbacks.day;
     const filter = this.filterCallbacks[options.filter] ?? defaultFilter;
     const sort = this.sortCallbacks[options.sort] ?? defaultSort;
-    return this._points.map(this.createPoint).filter(filter).sort(sort);
+    return this.points.map(this.createPoint).filter(filter).sort(sort);
   }
 
   /**
@@ -93,7 +103,7 @@ class AppModel extends Model {
     // TODO: Добавить данные на сервере
     const data = model.toJSON();
     data.id = crypto.randomUUID();
-    this._points.push(data);
+    this.points.push(data);
   }
 
   /**
@@ -103,8 +113,8 @@ class AppModel extends Model {
   async updatePoint(model) {
     //TODO: Обновить данные на сервере
     const data = model.toJSON();
-    const index = this._points.findIndex((point) => point.id === data.id);
-    this._points.splice(index, 1, data);
+    const index = this.points.findIndex((point) => point.id === data.id);
+    this.points.splice(index, 1, data);
   }
 
   /**
@@ -113,22 +123,22 @@ class AppModel extends Model {
    */
   async deletePoint(id) {
     // TODO: Удалить данные на сервере
-    const index = this._points.findIndex((point) => point.id === id);
-    this._points.splice(index, 1);
+    const index = this.points.findIndex((point) => point.id === id);
+    this.points.splice(index, 1);
   }
 
   /**
    * @returns {Array<Destination>}
    */
   getDestinations() {
-    return structuredClone(this._destinations);
+    return structuredClone(this.destinations);
   }
 
   /**
    * @returns {Array<OfferGroup>}
    */
   getOfferGroups() {
-    return structuredClone(this._offerGroups);
+    return structuredClone(this.offerGroups);
   }
 }
 
