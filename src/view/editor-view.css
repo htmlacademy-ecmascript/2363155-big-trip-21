@@ -1,8 +1,0 @@
-.event__type-label::first-letter {
-  text-transform: uppercase;
-}
-
-.event__photos-container {
-  overflow-x: auto;
-}
-

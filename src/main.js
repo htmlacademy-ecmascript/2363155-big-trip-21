@@ -1,32 +1,52 @@
-import './view/brief-view.js';
-import './view/filter-view.js';
-import './view/add-button-view.js';
-import './view/sort-view.js';
-import './view/list-view.js';
-import './view/placeholder-view.js';
-import './view/ui-blocker-view.js';
+import { AUTHORIZATION, END_POINT } from './const.js';
+import PointsModel from './models/points-model.js';
+import PointsApiService from './points-api-service.js';
+import OffersModel from './models/offers-model.js';
+import DestinationsModel from './models/destinations-model.js';
+import FilterModel from './models/filter-model.js';
+import BoardPresenter from './presenters/board-presenter.js';
+import SummaryPresenter from './presenters/summary-presenter.js';
+import FilterPresenter from './presenters/filter-presenter.js';
 
-import AppModel from './model/app-model.js';
-import ApiService from './service/api-service.js';
-import BriefPresenter from './presenter/brief-presenter.js';
-import FilterPresenter from './presenter/filter-presenter.js';
-import AddButtonPresenter from './presenter/add-button-presenter.js';
-import SortPresenter from './presenter/sort-presenter.js';
-import ListPresenter from './presenter/list-presenter.js';
-import PlaceholderPresenter from './presenter/placeholder-presenter.js';
-import UiBlockerPresenter from './presenter/ui-blocker-presenter.js';
+const headerContainer = document.querySelector('.trip-main');
+const summaryContainer = headerContainer.querySelector('.trip-controls');
+const filterContainer = headerContainer.querySelector('.trip-controls__filters');
+const boardContainer = document.querySelector('.trip-events');
 
-const apiService = new ApiService({authorization: 'Basic fdsjf039uur4hg48a84gfsgsfg9i90wiwt84wvxgxg4gjisk'});
-const appModel = new AppModel(apiService);
-new PlaceholderPresenter(document.querySelector('placeholder-view'), appModel);
+const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION);
 
-appModel.ready()
-  .then(() => {
-    new BriefPresenter(document.querySelector('brief-view'), appModel);
-    new FilterPresenter(document.querySelector('filter-view'), appModel);
-    new AddButtonPresenter(document.querySelector('add-button-view'), appModel);
-    new SortPresenter(document.querySelector('sort-view'), appModel);
-    new ListPresenter(document.querySelector('list-view'), appModel);
-    new UiBlockerPresenter(document.querySelector('ui-blocker-view'), appModel);
-  });
+const pointsModel = new PointsModel({ pointsApiService });
+const offersModel = new OffersModel({ pointsApiService });
+const destinationsModel = new DestinationsModel({ pointsApiService });
+const filterModel = new FilterModel();
+
+Promise.all([
+  offersModel.init(),
+  destinationsModel.init()
+]).then(() => pointsModel.init());
+
+const summaryPresenter = new SummaryPresenter({
+  summaryContainer,
+  pointsModel,
+  offersModel,
+  destinationsModel
+});
+summaryPresenter.init();
+
+const filterPresenter = new FilterPresenter({
+  filterContainer,
+  filterModel,
+  pointsModel
+});
+filterPresenter.init();
+
+const boardPresenter = new BoardPresenter({
+  boardContainer,
+  headerContainer,
+  pointsModel,
+  offersModel,
+  destinationsModel,
+  filterModel
+});
+boardPresenter.init();
 
