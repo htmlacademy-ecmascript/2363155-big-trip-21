@@ -10,24 +10,37 @@ class AppModel extends Model {
     super();
 
     /**
-     * @type {Array<Point>}
-     */
+         * @type {Array<Point>}
+         */
     this._points = [];
 
     /**
-     * @type {Array<Destination>}
-     */
+         * @type {Array<Destination>}
+         */
     this._destinations = [];
 
     /**
-     * @type {Array<OfferGroup>}
-     */
+         * @type {Array<OfferGroup>}
+         */
     this._offerGroups = [];
+
+    /**
+         *
+         * @type {Record<SortType, (pointA: PointModel, pointB: PointModel) => number>}
+         */
+    this.sortCallbacks = {
+      day: (pointA, pointB) => pointA.dateFrom.valueOf() - pointB.dateFrom.valueOf(),
+      event: () => 0,
+      time: (pointA, pointB) =>
+        (pointB.dateTo.valueOf() - pointB.dateFrom.valueOf()) - (pointA.dateTo.valueOf() - pointA.dateFrom.valueOf()),
+      price: (pointA, pointB) => pointB.basePrice - pointA.basePrice,
+      offers: () => 0,
+    };
   }
 
   /**
-   * @returns {Promise<void>}
-   */
+     * @returns {Promise<void>}
+     */
   async ready() {
     // TODO get server data
     // @ts-ignore
@@ -39,24 +52,27 @@ class AppModel extends Model {
   }
 
   /**
-   * @returns {Array<PointModel>}
+   * @param {{sort?: SortType}} options
+   * @return {Array<PointModel>}
    */
-  getPoints() {
-    return this._points.map(this.createPoint);
+  getPoints(options = {}) {
+    const defaultSort = this.sortCallbacks['day'];
+    const sort = this.sortCallbacks[options.sort] ?? defaultSort;
+    return this._points.map(this.createPoint).sort(sort);
   }
 
   /**
-   * @param {Point} data
-   * @returns {PointModel}
-   */
+     * @param {Point} data
+     * @returns {PointModel}
+     */
   createPoint(data = Object.create(null)) {
     return new PointModel(data);
   }
 
   /**
-   * @param {PointModel} model
-   * @returns {Promise<void>}
-   */
+     * @param {PointModel} model
+     * @returns {Promise<void>}
+     */
   async updatePoint(model) {
     //TODO: Обновить данные на сервере
     const data = model.toJSON();
@@ -65,15 +81,15 @@ class AppModel extends Model {
   }
 
   /**
-   * @returns {Array<Destination>}
-   */
+     * @returns {Array<Destination>}
+     */
   getDestinations() {
     return structuredClone(this._destinations);
   }
 
   /**
-   * @returns {Array<OfferGroup>}
-   */
+     * @returns {Array<OfferGroup>}
+     */
   getOfferGroups() {
     return structuredClone(this._offerGroups);
   }
