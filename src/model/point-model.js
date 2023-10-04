@@ -7,15 +7,30 @@ class PointModel extends Model {
    */
   constructor(point) {
     super();
-
     this.id = point.id;
     this.basePrice = point.base_price;
-    this.dataFrom = new Date(point.date_from);
-    this.dataTo = new Date(point.date_to);
+    this.dateFrom = new Date(point.date_from);
+    this.dateTo = new Date(point.date_to);
     this.destinationId = point.destination;
     this.isFavorite = point.is_favorite;
     this.offerIds = structuredClone(point.offers);
     this.type = point.type;
+  }
+
+  /**
+   * @returns {Point}
+   */
+  toJSON() {
+    return {
+      'id': this.id,
+      'base_price': this.basePrice,
+      'date_from': this.dateFrom,
+      'date_to': this.dateTo,
+      'destination': this.destinationId,
+      'is_favorite': this.isFavorite,
+      'offers': structuredClone(this.offerIds),
+      'type': this.type
+    };
   }
 }
 

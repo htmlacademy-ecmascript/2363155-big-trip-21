@@ -28,10 +28,13 @@ class AppModel extends Model {
   /**
    * @returns {Promise<void>}
    */
-  async ready(){
+  async ready() {
     // TODO get server data
+    // @ts-ignore
     this._points = points;
+    // @ts-ignore
     this._destinations = destinations;
+    // @ts-ignore
     this._offerGroups = offers;
   }
 
@@ -39,7 +42,26 @@ class AppModel extends Model {
    * @returns {Array<PointModel>}
    */
   getPoints() {
-    return this._points.map((point) => new PointModel(point));
+    return this._points.map(this.createPoint);
+  }
+
+  /**
+   * @param {Point} data
+   * @returns {PointModel}
+   */
+  createPoint(data = Object.create(null)) {
+    return new PointModel(data);
+  }
+
+  /**
+   * @param {PointModel} model
+   * @returns {Promise<void>}
+   */
+  async updatePoint(model) {
+    //TODO: Обновить данные на сервере
+    const data = model.toJSON();
+    const index = this._points.findIndex((point) => point.id === data.id);
+    this._points.splice(index, 1, data);
   }
 
   /**
