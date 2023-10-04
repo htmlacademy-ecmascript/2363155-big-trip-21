@@ -20,6 +20,9 @@ class FilterView extends View {
     this.classList.add('trip-filters');
   }
 
+  /**
+   * @override
+   */
   createHtml() {
     return html`
       ${this.state.items.map((item) => html`

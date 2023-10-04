@@ -39,6 +39,9 @@ class EditorView extends View {
     this.destroyCalendars = createCalendars(...this.querySelectorAll('.event__input--time'));
   }
 
+  /**
+   * @override
+   */
   createHtml() {
     return html`
       <form class="event event--edit" action="#" method="post">
@@ -60,6 +63,9 @@ class EditorView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createTypeFieldHtml() {
     const {types} = this.state;
     const currentTypeValue = types.find((type) => type.isSelected).value;
@@ -105,6 +111,9 @@ class EditorView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createDestinationFieldHtml() {
     const {types, destinations} = this.state;
     return html`
@@ -130,6 +139,9 @@ class EditorView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createScheduleFieldHtml() {
     const {dateFrom, dateTo} = this.state;
     return html`
@@ -153,6 +165,9 @@ class EditorView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createPriceFieldHtml() {
     const {basePrice} = this.state;
     return html`
@@ -172,6 +187,9 @@ class EditorView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createSubmitButtonHtml() {
     const {isSaving} = this.state;
 
@@ -185,6 +203,9 @@ class EditorView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createResetButtonHtml() {
     const {id, isDeleting} = this.state;
     if (id === 'draft') {
@@ -203,6 +224,9 @@ class EditorView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createCloseButtonHtml() {
     const {id} = this.state;
     if (id === 'draft') {
@@ -216,6 +240,9 @@ class EditorView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createOfferListHtml() {
     const {offers} = this.state;
     if (offers.length < 1) {
@@ -250,6 +277,9 @@ class EditorView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createDestinationHtml() {
     const {destinations} = this.state;
     const selectedDestination = destinations.find((destination) => destination.isSelected);

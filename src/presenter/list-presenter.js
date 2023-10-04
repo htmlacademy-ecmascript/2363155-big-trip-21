@@ -1,5 +1,4 @@
 import Presenter from './presenter.js';
-import flatpickr from 'flatpickr';
 
 /**
  * @typedef {import('../view/list-view').default} View
@@ -9,8 +8,8 @@ import flatpickr from 'flatpickr';
  */
 class ListPresenter extends Presenter {
   /**
-     * @param {[View, Model]} rest
-     */
+   * @param {[View, Model]} rest
+   */
   constructor(...rest) {
     super(...rest);
     this.view.addEventListener('open', this.onViewOpen.bind(this));
@@ -22,8 +21,8 @@ class ListPresenter extends Presenter {
   }
 
   /**
-     * @override
-     */
+   * @override
+   */
   updateView() {
     const params = this.navigation.getParams();
     const points = this.model.getPoints(params);
@@ -67,9 +66,9 @@ class ListPresenter extends Presenter {
   }
 
   /**
-     * @param {import('../view/list-view').ItemState} state
-     * @returns {import('../model/point-model').default}
-     */
+   * @param {import('../view/list-view').ItemState} state
+   * @returns {import('../model/point-model').default}
+   */
   createPoint(state) {
     const point = this.model.createPoint();
     Object.assign(point, {
@@ -96,8 +95,8 @@ class ListPresenter extends Presenter {
     Object.assign(point, {
       id: 'draft',
       type: 'flight',
-      dateFrom: new Date(),
-      dateTo: new Date(),
+      dateFrom: null,
+      dateTo: null,
       basePrice: 0,
       isFavorite: false
     });
@@ -105,10 +104,10 @@ class ListPresenter extends Presenter {
   }
 
   /**
-     * @param {CustomEvent & {
-     *    target: import('../view/card-view').default
-     * }} event
-     */
+   * @param {CustomEvent & {
+   *    target: import('../view/card-view').default
+   * }} event
+   */
   onViewOpen(event) {
     const params = this.navigation.getParams();
     params.edit = event.target.state.id;
@@ -122,10 +121,10 @@ class ListPresenter extends Presenter {
   }
 
   /**
-     * @param {CustomEvent & {
-     *    target: import('../view/card-view').default
-     * }} event
-     */
+   * @param {CustomEvent & {
+   *    target: import('../view/card-view').default
+   * }} event
+   */
   async onViewFavorite(event) {
     const card = event.target;
 
@@ -139,10 +138,10 @@ class ListPresenter extends Presenter {
   }
 
   /**
-     * @param {CustomEvent<HTMLInputElement> & {
-     *  target: import('../view/editor-view').default
-     * }} event
-     */
+   * @param {CustomEvent<HTMLInputElement> & {
+   *  target: import('../view/editor-view').default
+   * }} event
+   */
   onViewEdit(event) {
     const editor = event.target;
     const input = event.detail;
@@ -160,28 +159,18 @@ class ListPresenter extends Presenter {
         type.isSelected = type.value === input.value;
       });
       editor.render();
-      return;
-    }
 
-    if (input.name === 'event-destination') {
+    } else if (input.name === 'event-destination') {
       editor.state.destinations.forEach((destination) => {
         destination.isSelected = destination.name === input.value;
       });
       editor.render();
 
     } else if (input.name === 'event-start-time') {
-      const flatpickrInstance = flatpickr(input, {
-        dateFormat: 'Y-m-d',
-      });
-      flatpickrInstance.setDate(input.value);
-      editor.state.dateFrom = flatpickrInstance.selectedDates[0];
+      editor.state.dateFrom = new Date(input.value);
 
     } else if (input.name === 'event-end-time') {
-      const flatpickrInstance = flatpickr(input, {
-        dateFormat: 'Y-m-d',
-      });
-      flatpickrInstance.setDate(input.value);
-      editor.state.dateTo = flatpickrInstance.selectedDates[0];
+      editor.state.dateTo = new Date(input.value);
 
     } else if (input.name === 'event-price') {
       editor.state.basePrice = Number(input.value);

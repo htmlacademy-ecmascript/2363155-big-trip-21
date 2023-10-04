@@ -9,6 +9,10 @@ import {html} from '../util.js';
  * @extends {View<State>}
  */
 class AddButtonView extends View {
+
+  /**
+   * @override
+   */
   createHtml() {
     const {isDisabled} = this.state;
 

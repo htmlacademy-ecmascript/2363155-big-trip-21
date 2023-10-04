@@ -8,8 +8,8 @@ import Presenter from './presenter.js';
  */
 class UiBlockerPresenter extends Presenter {
   /**
-     * @param {[View, Model]} rest
-     */
+   * @param {[View, Model]} rest
+   */
   constructor(...rest) {
     super(...rest);
     this.model.addEventListener('busy', this.onModelBusy.bind(this));

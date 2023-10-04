@@ -24,8 +24,8 @@ class PointModel extends Model {
     return {
       'id': this.id,
       'base_price': this.basePrice,
-      'date_from': this.dateFrom,
-      'date_to': this.dateTo,
+      'date_from': this.dateFrom.toISOString(),
+      'date_to': this.dateTo.toISOString(),
       'destination': this.destinationId,
       'is_favorite': this.isFavorite,
       'offers': structuredClone(this.offerIds),

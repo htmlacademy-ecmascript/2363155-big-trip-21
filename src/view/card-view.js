@@ -18,6 +18,9 @@ class CardView extends View {
   }
 
 
+  /**
+   * @override
+   */
   createHtml() {
     return html`
       <div class="event">
@@ -33,6 +36,9 @@ class CardView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createStartDataHtml() {
     const {dateFrom} = this.state;
     return html`
@@ -42,6 +48,9 @@ class CardView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createTypeIconHtml() {
     const {types} = this.state;
     const currentType = types.find((type) => type.isSelected).value;
@@ -57,6 +66,9 @@ class CardView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createDestinationHtml() {
     const {types, destinations} = this.state;
     const currentType = types.find((type) => type.isSelected).value;
@@ -66,6 +78,9 @@ class CardView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createScheduleHtml() {
     const {dateFrom, dateTo} = this.state;
     return html`
@@ -86,6 +101,9 @@ class CardView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createPriceHtml() {
     const {basePrice} = this.state;
     return html`
@@ -95,6 +113,9 @@ class CardView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createOfferListHtml() {
     const {offers} = this.state;
     const currentOffers = offers.filter((offer) => offer.isSelected);
@@ -116,6 +137,9 @@ class CardView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createFavoriteButtonHtml() {
     const {isFavorite} = this.state;
     return html`
@@ -130,6 +154,9 @@ class CardView extends View {
     `;
   }
 
+  /**
+   * @returns {string}
+   */
   createOpenButtonHtml() {
     return html`
       <button class="event__rollup-btn" type="button">
