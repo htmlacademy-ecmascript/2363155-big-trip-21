@@ -1,4 +1,5 @@
 import Presenter from './presenter.js';
+import flatpickr from 'flatpickr';
 
 /**
  * @typedef {import('../view/list-view').default} View
@@ -139,9 +140,25 @@ class ListPresenter extends Presenter {
         destination.isSelected = destination.name === input.value;
       });
       editor.render();
+
+    } else if (input.name === 'event-start-time') {
+      const flatpickrInstance = flatpickr(input, {
+        dateFormat: 'Y-m-d',
+      });
+      flatpickrInstance.setDate(input.value);
+      editor.state.dateFrom = flatpickrInstance.selectedDates[0];
+
+    } else if (input.name === 'event-end-time') {
+      const flatpickrInstance = flatpickr(input, {
+        dateFormat: 'Y-m-d',
+      });
+      flatpickrInstance.setDate(input.value);
+      editor.state.dateTo = flatpickrInstance.selectedDates[0];
+
     }
   }
 }
 
 export default ListPresenter;
+
 

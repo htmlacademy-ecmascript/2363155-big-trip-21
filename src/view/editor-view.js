@@ -1,6 +1,6 @@
 import './editor-view.css';
 import View from './view.js';
-import {html} from '../util.js';
+import {createCalendars, html} from '../util.js';
 
 /**
  * @typedef {import('./list-view').ItemState} State
@@ -10,6 +10,10 @@ import {html} from '../util.js';
 class EditorView extends View {
   constructor() {
     super();
+    /**
+     * @type {Function}
+     */
+    this.destroyCalendars = null;
     this.addEventListener('click', this.onClick);
     this.addEventListener('change', this.onChange);
   }
@@ -19,7 +23,18 @@ class EditorView extends View {
   }
 
   disconnectedCallback() {
+    this.destroyCalendars();
     document.removeEventListener('keydown', this);
+  }
+
+  /**
+   * @override
+   */
+  render() {
+    this.destroyCalendars?.();
+    super.render();
+    // @ts-ignore
+    this.destroyCalendars = createCalendars(...this.querySelectorAll('.event__input--time'));
   }
 
   createHtml() {
