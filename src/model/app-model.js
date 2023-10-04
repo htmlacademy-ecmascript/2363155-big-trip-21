@@ -10,24 +10,24 @@ class AppModel extends Model {
     super();
 
     /**
-         * @type {Array<Point>}
-         */
+     * @type {Array<Point>}
+     */
     this._points = [];
 
     /**
-         * @type {Array<Destination>}
-         */
+     * @type {Array<Destination>}
+     */
     this._destinations = [];
 
     /**
-         * @type {Array<OfferGroup>}
-         */
+     * @type {Array<OfferGroup>}
+     */
     this._offerGroups = [];
 
     /**
-         *
-         * @type {Record<SortType, (pointA: PointModel, pointB: PointModel) => number>}
-         */
+     *
+     * @type {Record<SortType, (pointA: PointModel, pointB: PointModel) => number>}
+     */
     this.sortCallbacks = {
       day: (pointA, pointB) => pointA.dateFrom.valueOf() - pointB.dateFrom.valueOf(),
       event: () => 0,
@@ -36,11 +36,21 @@ class AppModel extends Model {
       price: (pointA, pointB) => pointB.basePrice - pointA.basePrice,
       offers: () => 0,
     };
+
+    /**
+     * @type {Record<FilterType, (point: PointModel) => boolean>}
+     */
+    this.filterCallbacks = {
+      everything: () => true,
+      future: (point) => point.dateFrom.valueOf() > Date.now(),
+      present: (point) => point.dateFrom.valueOf() <= Date.now() && point.dateTo.valueOf() >= Date.now(),
+      past: (point) => point.dateTo.valueOf() < Date.now()
+    };
   }
 
   /**
-     * @returns {Promise<void>}
-     */
+   * @returns {Promise<void>}
+   */
   async ready() {
     // TODO get server data
     // @ts-ignore
@@ -52,27 +62,44 @@ class AppModel extends Model {
   }
 
   /**
-   * @param {{sort?: SortType}} options
+   * @param {{
+   *  filter?: FilterType
+   *  sort?: SortType
+   * }} options
+   *
    * @return {Array<PointModel>}
    */
   getPoints(options = {}) {
-    const defaultSort = this.sortCallbacks['day'];
+    const defaultFilter = this.filterCallbacks.everything;
+    const defaultSort = this.sortCallbacks.day;
+    const filter = this.filterCallbacks[options.filter] ?? defaultFilter;
     const sort = this.sortCallbacks[options.sort] ?? defaultSort;
-    return this._points.map(this.createPoint).sort(sort);
+    return this._points.map(this.createPoint).filter(filter).sort(sort);
   }
 
   /**
-     * @param {Point} data
-     * @returns {PointModel}
-     */
+   * @param {Point} data
+   * @returns {PointModel}
+   */
   createPoint(data = Object.create(null)) {
     return new PointModel(data);
   }
 
   /**
-     * @param {PointModel} model
-     * @returns {Promise<void>}
-     */
+   * @param {PointModel} model
+   * @returns {Promise<void>}
+   */
+  async addPoint(model) {
+    // TODO: Добавить данные на сервере
+    const data = model.toJSON();
+    data.id = crypto.randomUUID();
+    this._points.push(data);
+  }
+
+  /**
+   * @param {PointModel} model
+   * @returns {Promise<void>}
+   */
   async updatePoint(model) {
     //TODO: Обновить данные на сервере
     const data = model.toJSON();
@@ -81,15 +108,25 @@ class AppModel extends Model {
   }
 
   /**
-     * @returns {Array<Destination>}
-     */
+   * @param {string} id
+   * @returns {Promise<void>}
+   */
+  async deletePoint(id) {
+    // TODO: Удалить данные на сервере
+    const index = this._points.findIndex((point) => point.id === id);
+    this._points.splice(index, 1);
+  }
+
+  /**
+   * @returns {Array<Destination>}
+   */
   getDestinations() {
     return structuredClone(this._destinations);
   }
 
   /**
-     * @returns {Array<OfferGroup>}
-     */
+   * @returns {Array<OfferGroup>}
+   */
   getOfferGroups() {
     return structuredClone(this._offerGroups);
   }
