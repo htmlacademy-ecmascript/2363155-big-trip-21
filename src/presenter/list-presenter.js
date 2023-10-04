@@ -14,6 +14,7 @@ class ListPresenter extends Presenter {
     super(...rest);
     this.view.addEventListener('open', this.onViewOpen.bind(this));
     this.view.addEventListener('close', this.onViewClose.bind(this));
+    this.view.addEventListener('favorite', this.onViewFavorite.bind(this));
   }
 
   /**
@@ -40,8 +41,8 @@ class ListPresenter extends Presenter {
           isSelected: destination.id === point.destinationId
         })),
 
-        dateFrom: point.dataFrom,
-        dateTo: point.dataTo,
+        dateFrom: point.dateFrom,
+        dateTo: point.dateTo,
         basePrice: point.basePrice,
 
         offers: offers.map((offer) => ({
@@ -55,6 +56,27 @@ class ListPresenter extends Presenter {
     });
 
     this.view.setState({items});
+  }
+
+  /**
+   * @param {import('../view/list-view').ItemState} state
+   * @returns {import('../model/point-model').default}
+   */
+  createPoint(state) {
+    const point = this.model.createPoint();
+    Object.assign(point, {
+      id: state.id,
+      type: state.types.find((type) => type.isSelected).value,
+      destinationId: state.destinations.find((destination) => destination.isSelected)?.id,
+      dateFrom: state.dateFrom,
+      dateTo: state.dateTo,
+      basePrice: state.basePrice,
+      offerIds: state.offers
+        .filter((offer) => offer.isSelected)
+        .map((offer) => offer.id),
+      isFavorite: state.isFavorite
+    });
+    return point;
   }
 
   /**
@@ -73,7 +95,18 @@ class ListPresenter extends Presenter {
     delete params.edit;
     this.navigation.setParams(params);
   }
+
+  /**
+   * @param {CustomEvent & {
+   *    target: import('../view/card-view').default
+   * }} event
+   */
+  async onViewFavorite(event) {
+    const card = event.target;
+    card.state.isFavorite = !card.state.isFavorite;
+    await this.model.updatePoint(this.createPoint(card.state));
+    card.render();
+  }
 }
 
 export default ListPresenter;
-
