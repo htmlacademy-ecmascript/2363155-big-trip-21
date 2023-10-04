@@ -28,19 +28,19 @@ class FilterPresenter extends Presenter {
     const items = values.map((value) => ({
       value,
       isSelected: value === filter,
-      isDisabled: false
+      isDisabled: !this.model.getPoints({filter: value}).length
     }));
 
     this.view.setState({items});
   }
 
   /**
-     * @param {Event & {
-     *  target: HTMLInputElement & {
-     *    value: FilterType
-     *  }
-     * }} event
-     */
+   * @param {Event & {
+   *  target: HTMLInputElement & {
+   *    value: FilterType
+   *  }
+   * }} event
+   */
   onViewChange(event) {
     this.navigation.setParams({
       filter: event.target.value

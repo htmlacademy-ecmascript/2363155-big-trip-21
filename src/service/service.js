@@ -7,8 +7,8 @@
 */
 class Service {
   /**
-     * @param {Options} options
-     */
+   * @param {Options} options
+   */
   constructor(options) {
     this.baseUrl = options.baseUrl;
     this.authorization = options.authorization;
@@ -16,10 +16,10 @@ class Service {
   }
 
   /**
-     * @param {string} path
-     * @param {RequestInit} options
-     * @returns {Promise<Response>}
-     */
+   * @param {string} path
+   * @param {RequestInit} options
+   * @returns {Promise<Response>}
+   */
   request(path, options = {}) {
     const url = new URL(path, this.baseUrl);
     const responsePromise = fetch(url, this.extendRequest(options));
@@ -38,9 +38,9 @@ class Service {
   }
 
   /**
-     * @param {RequestInit} options
-     * @returns {RequestInit}
-     */
+   * @param {RequestInit} options
+   * @returns {RequestInit}
+   */
   extendRequest(options) {
     const headers = new Headers(options.headers);
     if (this.authorization) {
@@ -50,8 +50,8 @@ class Service {
   }
 
   /**
-     * @param {Response} response
-     */
+   * @param {Response} response
+   */
   assertResponse(response) {
     if (!response.ok) {
       throw new Error(String(response.status), {

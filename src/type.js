@@ -2,8 +2,8 @@
  * @typedef {{
 *  id: string
 *  base_price: number
-*  date_from: Date
-*  date_to: Date
+*  date_from: string
+*  date_to: string
 *  destination: string
 *  is_favorite: boolean
 *  offers: Array<string>

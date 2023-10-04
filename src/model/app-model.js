@@ -30,10 +30,10 @@ class AppModel extends Model {
      * @type {Record<SortType, (pointA: PointModel, pointB: PointModel) => number>}
      */
     this.sortCallbacks = {
-      day: (pointA, pointB) => pointA.dateFrom.valueOf() - pointB.dateFrom.valueOf(),
+      day: (pointA, pointB) => pointA.dateFrom.getTime() - pointB.dateFrom.getTime(),
       event: () => 0,
       time: (pointA, pointB) =>
-        (pointB.dateTo.valueOf() - pointB.dateFrom.valueOf()) - (pointA.dateTo.valueOf() - pointA.dateFrom.valueOf()),
+        (pointB.dateTo.getTime() - pointB.dateFrom.getTime()) - (pointA.dateTo.getTime() - pointA.dateFrom.getTime()),
       price: (pointA, pointB) => pointB.basePrice - pointA.basePrice,
       offers: () => 0,
     };
@@ -43,9 +43,9 @@ class AppModel extends Model {
      */
     this.filterCallbacks = {
       everything: () => true,
-      future: (point) => point.dateFrom.valueOf() > Date.now(),
-      present: (point) => point.dateFrom.valueOf() <= Date.now() && point.dateTo.valueOf() >= Date.now(),
-      past: (point) => point.dateTo.valueOf() < Date.now()
+      future: (point) => point.dateFrom.getTime() > Date.now(),
+      present: (point) => point.dateFrom.getTime() <= Date.now() && point.dateTo.getTime() >= Date.now(),
+      past: (point) => point.dateTo.getTime() < Date.now()
     };
   }
 
@@ -77,7 +77,7 @@ class AppModel extends Model {
    *  sort?: SortType
    * }} options
    *
-   * @return {Array<PointModel>}
+   * @returns {Array<PointModel>}
    */
   getPoints(options = {}) {
     const defaultFilter = this.filterCallbacks.everything;

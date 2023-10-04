@@ -10,8 +10,8 @@ import {html} from '../util.js';
  */
 class PlaceholderView extends View {
   /**
-     * @override
-     */
+   * @override
+   */
   createHtml() {
     const {message} = this.state;
     if (!message) {
