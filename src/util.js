@@ -1,3 +1,4 @@
+
 import 'flatpickr/dist/flatpickr.css';
 import dayjs from 'dayjs';
 import durationPlugin from 'dayjs/plugin/duration';
@@ -66,10 +67,18 @@ function formatNumber(value) {
  * @returns {Function}
  */
 function createCalendars(inputFrom, inputTo) {
+
+  if (!inputFrom.value || isNaN(new Date(inputFrom.value).getTime())) {
+    inputFrom.value = new Date().toISOString();
+  }
+  if (!inputTo.value || isNaN(new Date(inputTo.value).getTime())) {
+    inputTo.value = new Date().toISOString();
+  }
+
   /**
    * @type {import('flatpickr/dist/types/options').Options}
    */
-  const options = {
+  const commonOptions = {
     dateFormat: 'Z',
     altInput: true,
     altFormat: 'd/m/y H:i',
@@ -78,13 +87,8 @@ function createCalendars(inputFrom, inputTo) {
     'time_24hr': true
   };
 
-  const dateInputFrom = new Date(inputFrom.value);
-  const calendarFrom = flatpickr(inputFrom, options);
-  calendarFrom.setDate(dateInputFrom.getTime(), true);
-
-  const dateInputTo = new Date(inputTo.value);
-  const calendarTo = flatpickr(inputTo, options);
-  calendarTo.setDate(dateInputTo.getTime(), true);
+  const calendarFrom = flatpickr(inputFrom, commonOptions);
+  const calendarTo = flatpickr(inputTo, commonOptions);
 
   calendarFrom.set('onChange', ([date]) => calendarTo.set('minDate', date));
   calendarTo.set('minDate', calendarFrom.selectedDates.at(0));

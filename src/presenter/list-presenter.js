@@ -17,6 +17,8 @@ class ListPresenter extends Presenter {
     this.view.addEventListener('close', this.onViewClose.bind(this));
     this.view.addEventListener('favorite', this.onViewFavorite.bind(this));
     this.view.addEventListener('edit', this.onViewEdit.bind(this));
+    this.view.addEventListener('save', this.onViewSave.bind(this));
+    this.view.addEventListener('delete', this.onViewDelete.bind(this));
   }
 
   /**
@@ -27,6 +29,10 @@ class ListPresenter extends Presenter {
     const points = this.model.getPoints(params);
     const destinations = this.model.getDestinations();
     const offerGroups = this.model.getOfferGroups();
+
+    if (params.edit === 'draft') {
+      points.unshift(this.createDraftPoint());
+    }
 
     const items = points.map((point) => {
       const {offers} = offerGroups.find((group) => group.type === point.type);
@@ -77,6 +83,23 @@ class ListPresenter extends Presenter {
         .filter((offer) => offer.isSelected)
         .map((offer) => offer.id),
       isFavorite: state.isFavorite
+    });
+    return point;
+  }
+
+  /**
+   * @returns {import('../model/point-model').default}
+   */
+  createDraftPoint() {
+    const point = this.model.createPoint();
+
+    Object.assign(point, {
+      id: 'draft',
+      type: 'flight',
+      dateFrom: new Date(),
+      dateTo: new Date(),
+      basePrice: 0,
+      isFavorite: false
     });
     return point;
   }
@@ -155,10 +178,49 @@ class ListPresenter extends Presenter {
       flatpickrInstance.setDate(input.value);
       editor.state.dateTo = flatpickrInstance.selectedDates[0];
 
+    } else if (input.name === 'event-price') {
+      editor.state.basePrice = Number(input.value);
+
+    } else if (input.name === 'event-offer') {
+      editor.state.offers.some((offer) => {
+        if (offer.id === input.value) {
+          offer.isSelected = !offer.isSelected;
+          return true;
+        }
+      });
     }
+  }
+
+  /**
+   * @param {CustomEvent & {
+   *  target: import('../view/editor-view').default
+   * }} event
+   */
+  async onViewSave(event) {
+    const editor = event.target;
+    const point = this.createPoint(editor.state);
+
+    if (editor.state.id === 'draft') {
+      await this.model.addPoint(point);
+    } else {
+      await this.model.updatePoint(point);
+    }
+    editor.dispatch('close');
+  }
+
+
+  /**
+   * @param {CustomEvent & {
+   *  target: import('../view/editor-view').default
+   * }} event
+   */
+  async onViewDelete(event) {
+    const editor = event.target;
+
+    await this.model.deletePoint(editor.state.id);
+    editor.dispatch('close');
   }
 }
 
 export default ListPresenter;
-
 
